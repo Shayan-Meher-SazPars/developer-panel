@@ -1,0 +1,18 @@
+[project]
+name = "DevPanel"
+version = "1.54.31"
+description = "saman willson is M.J"
+developers = [
+    {name = "Shayan Ghadamian", email = "shayanghad0@gmail.com"},
+    {name = "Vortex Team", email = "Info@Vortex-Team.ir"}
+    ]
+copyright = "2024-2025 Vortex Team" "2024-2025 Shayan Ghadamian"
+requires-python = ">=3.11"
+dependencies = [
+    "email-validator>=2.2.0",
+    "flask>=3.1.1",
+    "flask-sqlalchemy>=3.1.1",
+    "gunicorn>=23.0.0",
+    "psycopg2-binary>=2.9.10",
+    "werkzeug>=3.1.3",
+]
