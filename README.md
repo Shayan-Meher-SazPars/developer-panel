@@ -15,15 +15,21 @@ Easy to check developer task for co-founder teams :)
 buy ubuntu/windows server (suggest buy ubuntu server 18)
 
 download 3.8 python
-
+## if ubuntu
 ```install on ubuntu
 apt install python3.8
 ```
-
+## if it isnt bypass
 then install library
 
 ```install library
 pip install Flask
+```
+
+then run a project
+
+```python
+python main.py
 ```
 
 ### Prerequisites
