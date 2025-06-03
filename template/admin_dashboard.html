@@ -17,7 +17,145 @@
 <ul id="updateList"></ul>
   
 <style>agaian mmd</style>
-<script>again shayan</script>
+<script>
+async function apiFetch(url, method='GET', data=null) {
+  let opts = {method, headers: {'Content-Type': 'application/json'}, credentials: 'same-origin'};
+  if(data) opts.body = JSON.stringify(data);
+  const res = await fetch(url, opts);
+  if(!res.ok) throw await res.json();
+  return res.json();
+}
+
+async function loadUsers() {
+  try {
+    const users = await apiFetch('/admin/user');
+    const ul = document.getElementById('userList');
+    ul.innerHTML = '';
+    for(const u in users) {
+      let li = document.createElement('li');
+      const user = users[u];
+      li.textContent = `${u} (${user.role}, email: ${user.email}, phone: ${user.numberphone})`;
+      ul.appendChild(li);
+    }
+  } catch(e) {
+    alert('Error loading users');
+  }
+}
+
+async function addUser() {
+  try {
+    const username = prompt('Username');
+    const password = prompt('Password');
+    const email = prompt('Email');
+    const numberphone = prompt('Phone (+98XXXXXXXXXX)');
+    const github_id = prompt('Github ID');
+    const role = prompt('Role (admin or developer)');
+    if(!username||!password||!email||!numberphone||!github_id||!role) {
+      alert('All fields required');
+      return;
+    }
+    await apiFetch('/admin/user', 'POST', {username,password,email,numberphone,github_id,role});
+    alert('User added');
+    loadUsers();
+  } catch(e) {
+    alert('Error adding user: ' + (e.error || e));
+  }
+}
+
+async function loadTasks() {
+  try {
+    const tasks = await apiFetch('/admin/task');
+    const ul = document.getElementById('taskList');
+    const sel = document.getElementById('taskSelect');
+    ul.innerHTML = '';
+    sel.innerHTML = '';
+    for(const id in tasks) {
+      let t = tasks[id];
+      let li = document.createElement('li');
+      li.textContent = `#${id}: ${t.title} (dev: ${t.developer}, status: ${t.status})`;
+      ul.appendChild(li);
+      let option = document.createElement('option');
+      option.value = id;
+      option.textContent = `#${id}: ${t.title}`;
+      sel.appendChild(option);
+    }
+    loadUpdates();
+  } catch(e) {
+    alert('Error loading tasks');
+  }
+}
+
+document.getElementById('taskSelect').onchange = () => loadUpdates();
+
+async function loadUpdates() {
+  const taskId = document.getElementById('taskSelect').value;
+  if(!taskId) {
+    document.getElementById('updateList').innerHTML = '';
+    return;
+  }
+  try {
+    const updates = await apiFetch('/admin/task/updates/' + taskId);
+    const ul = document.getElementById('updateList');
+    ul.innerHTML = '';
+    updates.forEach((u,i) => {
+      let li = document.createElement('li');
+      let statusText = u.decision ? ('[' + u.decision.toUpperCase() + (u.reason ? ': ' + u.reason : '') + ']') : '[PENDING]';
+      li.textContent = `Update #${i+1}: ${u.description} ${statusText} `;
+      if(!u.decision) {
+        let acceptBtn = document.createElement('button');
+        acceptBtn.textContent = 'Accept';
+        acceptBtn.onclick = () => decideUpdate(taskId, i, 'accept');
+        li.appendChild(acceptBtn);
+
+        let rejectBtn = document.createElement('button');
+        rejectBtn.textContent = 'Reject';
+        rejectBtn.onclick = () => {
+          let reason = prompt('Reject reason (optional)');
+          decideUpdate(taskId, i, 'reject', reason);
+        };
+        li.appendChild(rejectBtn);
+      }
+      ul.appendChild(li);
+    });
+  } catch(e) {
+    alert('Error loading updates');
+  }
+}
+
+async function decideUpdate(taskId, updateIndex, decision, reason='') {
+  try {
+    await apiFetch(`/admin/task/updates/${taskId}/decide`, 'POST', {update_index:updateIndex, decision, reason});
+    alert(`Update ${decision}ed`);
+    loadTasks();
+  } catch(e) {
+    alert('Error deciding update: ' + (e.error || e));
+  }
+}
+
+async function addTask() {
+  try {
+    const title = prompt('Task title');
+    const description = prompt('Description');
+    const developers = prompt('Assign to developers (comma separated usernames)');
+    if(!title || !description || !developers) {
+      alert('All fields required'); return;
+    }
+    await apiFetch('/admin/task', 'POST', {title, description, developers});
+    alert('Task(s) added');
+    loadTasks();
+  } catch(e) {
+    alert('Error adding task: ' + (e.error || e));
+  }
+}
+
+document.getElementById('logoutBtn').onclick = async () => {
+  await apiFetch('/logout', 'POST');
+  window.location.href = '/';
+};
+
+loadUsers();
+loadTasks();
+</script>
 
 </body>
 </html>

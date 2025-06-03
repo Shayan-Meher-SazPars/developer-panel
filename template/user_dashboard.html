@@ -12,7 +12,47 @@
 </style>
   
 <script>
-  //shayan
+async function apiFetch(url, method='GET', data=null) {
+  let opts = {method, headers: {'Content-Type': 'application/json'}, credentials: 'same-origin'};
+  if(data) opts.body = JSON.stringify(data);
+  const res = await fetch(url, opts);
+  if(!res.ok) throw await res.json();
+  return res.json();
+}
+
+async function loadTasks() {
+  try {
+    const tasks = await apiFetch('/user/task');
+    const ul = document.getElementById('taskList');
+    ul.innerHTML = '';
+    for(const id in tasks) {
+      let t = tasks[id];
+      let li = document.createElement('li');
+      li.textContent = `#${id}: ${t.title} (status: ${t.status})`;
+      let btn = document.createElement('button');
+      btn.textContent = 'Add Update';
+      btn.onclick = () => {
+        const desc = prompt('Update description');
+        if(desc) {
+          apiFetch('/user/task/say/' + id, 'POST', {description: desc})
+            .then(() => { alert('Update added'); loadTasks(); })
+            .catch(e => alert('Error: ' + (e.error || e)));
+        }
+      };
+      li.appendChild(btn);
+      ul.appendChild(li);
+    }
+  } catch(e) {
+    alert('Error loading tasks');
+  }
+}
+
+document.getElementById('logoutBtn').onclick = async () => {
+  await apiFetch('/logout', 'POST');
+  window.location.href = '/';
+};
+
+loadTasks();
 </script>
 
 </body>
