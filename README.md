@@ -47,7 +47,7 @@ This project uses:
 
 - The project is configured to run on Replit
 - Uses Python 3.12 and web modules
-- Port 5000 is recommended for web applications
+- Port 5000 is recommended for web applications for subdomain with ssl certificate and for domain is 80 with ssl certificate
 
 ## Contributing
 
