@@ -1,0 +1,21 @@
+name: 'AI PR Reviewer'
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: jacobtomlinson/ai-pr-reviewer@v1
+        with:
+          ai-provider: 'gemini'
+          ai-api-key: ${{ secrets.GEMINI_API_KEY }}
