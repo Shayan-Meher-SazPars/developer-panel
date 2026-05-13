@@ -1,7 +1,7 @@
 
 # Create by code on Github:
 
-![Contributors](https://contrib.rocks/image?repo=Shayan-Meher-SazPars/developer-panel)
+![Contributors](https://contrib.rocks/image?repo=Shayan-Meher-SazPars/developer-panel/)
 
 Shayan / Pejman Ghadamian, Behrooz Akhavan,  Mohammad mahdi Darvish
 ##
