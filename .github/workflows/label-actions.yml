@@ -1,0 +1,26 @@
+name: 'Label Actions'
+
+on:
+  issues:
+    types: [labeled, unlabeled]
+  pull_request_target:
+    types: [labeled, unlabeled]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/label-actions@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config: |
+            'duplicate':
+              comment: >
+                Thanks for opening this issue. It looks like this is a duplicate of #{issue-number}. 
+                Let's continue the conversation there.
+              close: true
+              unlabeled: true

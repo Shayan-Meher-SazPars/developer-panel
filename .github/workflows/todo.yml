@@ -1,0 +1,21 @@
+name: 'Create TODO issues'
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [opened]
+
+jobs:
+  todo-actions:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: todo-actions
+        uses: n3ps/todo-actions@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          close-issues: true

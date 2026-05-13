@@ -1,0 +1,21 @@
+name: 'Welcome first-time contributors'
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            Welcome, and thank you for filing your first issue in the developer-panel project! We'll take a look shortly.
+          pr-message: |
+            Thank you for opening your first Pull Request! A maintainer will review your contribution soon.
