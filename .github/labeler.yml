@@ -1,0 +1,13 @@
+# .github/labeler.yml
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.html'
+    - any-glob-to-any-file: '**/*.css'
+
+backend:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.py'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: 'README.md'
